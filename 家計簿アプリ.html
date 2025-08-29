@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>家計簿アプリ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .input-section {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .input-section h2 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            color: #495057;
+            min-width: 80px;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 16px;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .summary-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .summary-card {
+            background-color: #e9ecef;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .summary-card h3 {
+            color: #495057;
+            margin-bottom: 10px;
+            font-size: 1.3em;
+        }
+
+        .summary-amount {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .total-card {
+            grid-column: 1 / -1;
+            background-color: #007bff;
+            color: white;
+        }
+
+        .total-card .summary-amount {
+            color: white;
+        }
+
+        .receipt-list {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .receipt-list h2 {
+            color: #495057;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .receipt-item {
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border-left: 4px solid #007bff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .receipt-info {
+            flex: 1;
+        }
+
+        .receipt-date {
+            font-size: 0.9em;
+            color: #6c757d;
+        }
+
+        .receipt-category {
+            font-weight: bold;
+            color: #495057;
+            margin: 5px 0;
+        }
+
+        .receipt-amount {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .no-data {
+            text-align: center;
+            color: #6c757d;
+            font-style: italic;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .summary-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .receipt-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .receipt-amount {
+                align-self: flex-end;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧾 家計簿アプリ</h1>
+        
+        <!-- 入力セクション -->
+        <div class="input-section">
+            <h2>レシート入力</h2>
+            <form id="receiptForm">
+                <div class="form-group">
+                    <label for="date">日付:</label>
+                    <input type="date" id="date" required>
+                    
+                    <label for="category">科目:</label>
+                    <select id="category" required>
+                        <option value="">選択してください</option>
+                        <option value="食費">食費</option>
+                        <option value="雑費">雑費</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="amount">金額:</label>
+                    <input type="number" id="amount" min="0" placeholder="例: 1000" required>
+                    
+                    <label for="store">店名:</label>
+                    <input type="text" id="store" placeholder="例: スーパーA">
+                </div>
+                
+                <button type="submit">追加</button>
+            </form>
+        </div>
+
+        <!-- 月間サマリー -->
+        <div class="summary-section">
+            <div class="summary-card">
+                <h3>食費</h3>
+                <div class="summary-amount" id="foodTotal">¥0</div>
+            </div>
+            <div class="summary-card">
+                <h3>雑費</h3>
+                <div class="summary-amount" id="miscTotal">¥0</div>
+            </div>
+            <div class="summary-card total-card">
+                <h3>今月の合計</h3>
+                <div class="summary-amount" id="monthlyTotal">¥0</div>
+            </div>
+        </div>
+
+        <!-- レシート一覧 -->
+        <div class="receipt-list">
+            <h2>今月のレシート一覧</h2>
+            <div id="receiptsList">
+                <div class="no-data">まだレシートが登録されていません</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class HouseholdBudgetApp {
+            constructor() {
+                this.receipts = this.loadReceipts();
+                this.initializeDate();
+                this.bindEvents();
+                this.updateDisplay();
+            }
+
+            initializeDate() {
+                const today = new Date();
+                document.getElementById('date').value = today.toISOString().split('T')[0];
+            }
+
+            bindEvents() {
+                document.getElementById('receiptForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.addReceipt();
+                });
+            }
+
+            addReceipt() {
+                const date = document.getElementById('date').value;
+                const category = document.getElementById('category').value;
+                const amount = parseInt(document.getElementById('amount').value);
+                const store = document.getElementById('store').value;
+
+                if (!date || !category || !amount) {
+                    alert('必須項目を入力してください');
+                    return;
+                }
+
+                const receipt = {
+                    id: Date.now(),
+                    date: date,
+                    category: category,
+                    amount: amount,
+                    store: store || '店名不明'
+                };
+
+                this.receipts.push(receipt);
+                this.saveReceipts();
+                this.updateDisplay();
+                this.clearForm();
+            }
+
+            deleteReceipt(id) {
+                if (confirm('このレシートを削除しますか？')) {
+                    this.receipts = this.receipts.filter(receipt => receipt.id !== id);
+                    this.saveReceipts();
+                    this.updateDisplay();
+                }
+            }
+
+            clearForm() {
+                document.getElementById('amount').value = '';
+                document.getElementById('store').value = '';
+                document.getElementById('category').value = '';
+            }
+
+            getCurrentMonthReceipts() {
+                const now = new Date();
+                const currentYear = now.getFullYear();
+                const currentMonth = now.getMonth();
+
+                return this.receipts.filter(receipt => {
+                    const receiptDate = new Date(receipt.date);
+                    return receiptDate.getFullYear() === currentYear && 
+                           receiptDate.getMonth() === currentMonth;
+                });
+            }
+
+            calculateTotals() {
+                const currentMonthReceipts = this.getCurrentMonthReceipts();
+                
+                const foodTotal = currentMonthReceipts
+                    .filter(receipt => receipt.category === '食費')
+                    .reduce((sum, receipt) => sum + receipt.amount, 0);
+
+                const miscTotal = currentMonthReceipts
+                    .filter(receipt => receipt.category === '雑費')
+                    .reduce((sum, receipt) => sum + receipt.amount, 0);
+
+                return {
+                    food: foodTotal,
+                    misc: miscTotal,
+                    total: foodTotal + miscTotal
+                };
+            }
+
+            updateDisplay() {
+                this.updateSummary();
+                this.updateReceiptsList();
+            }
+
+            updateSummary() {
+                const totals = this.calculateTotals();
+                
+                document.getElementById('foodTotal').textContent = `¥${totals.food.toLocaleString()}`;
+                document.getElementById('miscTotal').textContent = `¥${totals.misc.toLocaleString()}`;
+                document.getElementById('monthlyTotal').textContent = `¥${totals.total.toLocaleString()}`;
+            }
+
+            updateReceiptsList() {
+                const receiptsList = document.getElementById('receiptsList');
+                const currentMonthReceipts = this.getCurrentMonthReceipts()
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                if (currentMonthReceipts.length === 0) {
+                    receiptsList.innerHTML = '<div class="no-data">今月のレシートはまだありません</div>';
+                    return;
+                }
+
+                receiptsList.innerHTML = currentMonthReceipts.map(receipt => `
+                    <div class="receipt-item">
+                        <div class="receipt-info">
+                            <div class="receipt-date">${this.formatDate(receipt.date)}</div>
+                            <div class="receipt-category">${receipt.category} - ${receipt.store}</div>
+                        </div>
+                        <div style="display: flex; align-items: center;">
+                            <div class="receipt-amount">¥${receipt.amount.toLocaleString()}</div>
+                            <button class="delete-btn" onclick="app.deleteReceipt(${receipt.id})">削除</button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            formatDate(dateString) {
+                const date = new Date(dateString);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}/${month}/${day}`;
+            }
+
+            saveReceipts() {
+                localStorage.setItem('householdReceipts', JSON.stringify(this.receipts));
+            }
+
+            loadReceipts() {
+                const saved = localStorage.getItem('householdReceipts');
+                return saved ? JSON.parse(saved) : [];
+            }
+        }
+
+        const app = new HouseholdBudgetApp();
+    </script>
+</body>
+</html>

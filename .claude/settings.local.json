@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(start \"C:\\Users\\tmk\\OneDrive\\ドキュメント\\code\\250828\\家計簿アプリ.html\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
