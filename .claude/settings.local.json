@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(start \"C:\\Users\\tmk\\OneDrive\\ドキュメント\\code\\250828\\家計簿アプリ.html\")"
+      "Bash(start \"C:\\Users\\tmk\\OneDrive\\ドキュメント\\code\\250828\\家計簿アプリ.html\")",
+      "Bash(start \"\" \"C:\\Users\\tmk\\OneDrive\\ドキュメント\\code\\250828\\家計簿アプリ.html\")",
+      "Bash(python:*)",
+      "Bash(start http://localhost:8000/家計簿アプリ.html)",
+      "Bash(start:*)"
     ],
     "deny": [],
     "ask": []
